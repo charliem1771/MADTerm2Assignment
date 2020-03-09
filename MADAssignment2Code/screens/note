@@ -1,0 +1,11 @@
+fetch("url/chits", {
+  method: 'post',
+  headers: {
+    "Content-Type": "application/json",
+    "X-Authorization": AsyncStorage.getItem('token')
+  },
+  body: {
+    email: this.state.email,
+    password: this.stats.password
+  }
+})

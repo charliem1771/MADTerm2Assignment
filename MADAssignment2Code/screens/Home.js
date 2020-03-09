@@ -29,7 +29,7 @@ class HomeScreen extends Component
   }
   getUser()
   {
-    return fetch("http://10.0.2.2:3333/api/v0.0.5/user/" + this.state.id)
+    return fetch("http://10.0.2.2:3333/api/v0.0.5/search_user?q="+this.state.id)
     .then((response) => response.json())
     .then((responseJson) => {
       this.setState({

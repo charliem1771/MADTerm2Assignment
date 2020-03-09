@@ -2,7 +2,6 @@ import React,{ Component } from 'react';
 import { FlatList,ActivityIndicator,Text,View,Button,TextInput,StyleSheet } from 'react-native';
 class LoginScreen extends Component
 {
-
   constructor(props)
   {
     super(props);
@@ -14,7 +13,19 @@ class LoginScreen extends Component
   }
   login()
   {
-    return fetch("http://10.0.2.2:3333/api/v0.0.5/login/"+this.state.email+","+this.state.password)
+    return fetch("http://10.0.2.2:3333/api/v0.0.5/login/",{
+      method: 'POST',
+      headers:
+      {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+      },
+      body: JSON.stringify
+      ({
+        email: this.state.email,
+        password: this.state.password,
+      }),
+    })
     .then((response) => this.props.navigation.navigate('Home'))
     .catch((error) => {
       console.log(error);
@@ -31,7 +42,7 @@ class LoginScreen extends Component
           <Button title="Login" onPress={()=>this.login()}/>
         </View>
         <View style={styles.registerButton}>
-          <Button title="Dont have an Account Sign Up!" onPress={()=>this.getUser()}/>
+          <Button title="Dont have an Account Sign Up!" onPress={()=>this.props.navigation.navigate('Register')}/>
         </View>
       </View>
     );
@@ -72,7 +83,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row-reverse',
     marginTop: 100,
     height:40,
-    marginLeft: 100
+    marginLeft: 150
   }
 });
 export default LoginScreen;
