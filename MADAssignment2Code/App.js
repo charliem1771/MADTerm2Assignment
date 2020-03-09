@@ -1,8 +1,21 @@
 import{ createAppContainer } from 'react-navigation';
-import{ createStackNavigator } from 'react-navigation-stack';
+import { createBottomTabNavigator  } from 'react-navigation-tabs';
+import { createStackNavigator  } from 'react-navigation-stack';
 import HomeScreen from './screens/Home';
 import LoginScreen from './screens/Login';
 const AppStackNav = createStackNavigator({
+  Home:{
+    screen: HomeScreen
+  },
+  Login:
+  {
+    screen: LoginScreen
+  }
+});
+
+const AppContainer = createAppContainer(AppStackNav)
+export default AppContainer;
+/*const AppTabNav = createBottomTabNavigator({
   Home:
   {
       screen: HomeScreen
@@ -12,5 +25,5 @@ const AppStackNav = createStackNavigator({
       screen: LoginScreen
   }
 });
-const AppContainer = createAppContainer(AppStackNav);
-export default AppContainer;
+const AppContainer = createAppContainer(AppTabNav);
+export default AppContainer;*/
