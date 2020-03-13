@@ -4,6 +4,8 @@ import { createStackNavigator  } from 'react-navigation-stack';
 import HomeScreen from './screens/Home';
 import LoginScreen from './screens/Login';
 import RegisterScreen from './screens/Register';
+import HomeScreenLoggedIn from './screens/HomeLoggedIn';
+import ProfileScreen from './screens/profilePage';
 const AppStackNav = createStackNavigator({
   Home:{
     screen: HomeScreen
@@ -16,6 +18,14 @@ const AppStackNav = createStackNavigator({
   {
     screen: RegisterScreen
   },
+  HomeLoggedIn:
+  {
+    screen: HomeScreenLoggedIn
+  },
+  profilePage:
+  {
+    screen: ProfileScreen
+  }
 });
 
 const AppContainer = createAppContainer(AppStackNav)

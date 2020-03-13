@@ -1,5 +1,6 @@
 import React,{ Component } from 'react';
-import { FlatList,ActivityIndicator,Text,View,Button,TextInput,StyleSheet } from 'react-native';
+import { FlatList,ActivityIndicator,Text,View,Button,TextInput,StyleSheet,Alert } from 'react-native';
+import {AsyncStorage} from 'react-native';
 class LoginScreen extends Component
 {
   constructor(props)
@@ -8,8 +9,29 @@ class LoginScreen extends Component
     this.state =
     {
       email: '',
-      password: ''
+      password: '',
+      token: ''
     }
+  }
+
+  async storeToken(resp,respVal)
+  {
+    try
+    {
+      await AsyncStorage.setItem(resp,respVal)
+      let user = await AsyncStorage.getItem('TOKEN_KEY');
+      console.log(user)
+    }
+    catch(error)
+    {
+      console.log("Error");
+    }
+  }
+  async storeId(resp,respVal)
+  {
+    await AsyncStorage.setItem(resp,respVal)
+    let id = await AsyncStorage.getItem('ID');
+    console.log("test",id)
   }
   login()
   {
@@ -26,7 +48,13 @@ class LoginScreen extends Component
         password: this.state.password,
       }),
     })
-    .then((response) => this.props.navigation.navigate('Home'))
+    .then(response => response.json())
+    .then(json => {
+      this.storeId('ID',json.id);
+      this.storeToken('TOKEN_KEY',json.token)
+      this.props.navigation.navigate('HomeLoggedIn');
+    }
+    )
     .catch((error) => {
       console.log(error);
     });
