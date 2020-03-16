@@ -55,7 +55,7 @@ class HomeScreenLoggedIn extends Component
   async postChit()
   {
     let userToken = await AsyncStorage.getItem('TOKEN_KEY')
-    console.log("checking!!!",userToken)
+    
     return fetch("http://10.0.2.2:3333/api/v0.0.5/chits",
     {
       headers:

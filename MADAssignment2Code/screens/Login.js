@@ -20,19 +20,14 @@ class LoginScreen extends Component
     {
       await AsyncStorage.setItem(resp,respVal)
       let user = await AsyncStorage.getItem('TOKEN_KEY');
-      console.log(user)
+      let id = await AsyncStorage.getItem('userId');
     }
     catch(error)
     {
       console.log("Error");
     }
   }
-  async storeId(resp,respVal)
-  {
-    await AsyncStorage.setItem(resp,respVal)
-    let id = await AsyncStorage.getItem('ID');
-    console.log("test",id)
-  }
+
   login()
   {
     return fetch("http://10.0.2.2:3333/api/v0.0.5/login/",{
@@ -50,7 +45,8 @@ class LoginScreen extends Component
     })
     .then(response => response.json())
     .then(json => {
-      this.storeId('ID',json.id);
+      let data = json.id.toString();
+      this.storeToken('userId',data);
       this.storeToken('TOKEN_KEY',json.token)
       this.props.navigation.navigate('HomeLoggedIn');
     }
