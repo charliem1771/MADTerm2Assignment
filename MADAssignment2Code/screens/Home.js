@@ -10,7 +10,6 @@ class HomeScreen extends Component
       isLoading: true,
       chits: [],
       id: '',
-      user: ''
     }
   }
   getData()
@@ -70,18 +69,20 @@ class HomeScreen extends Component
         data = {this.state.user}
         renderItem = {({item}) =>
         <View>
-          <Text style ={styles.chits}>{item.given_name}</Text>
+          <Text style>{item.given_name}</Text>
         </View>}
         keyExtractor = {({id},index) => id}
         />
-        <FlatList
-        data = {this.state.chits}
-        renderItem = {({item}) =>
-        <View>
-          <Text>{item.chit_content}</Text>
-        </View>}
-        keyExtractor = {({id},index) => id}
-        />
+        <View style= {styles.chits}>
+          <FlatList
+          data = {this.state.chits}
+          renderItem = {({item}) =>
+          <View>
+            <Text>{item.user.given_name} {item.user.family_name}: {item.chit_content}</Text>
+          </View>}
+          keyExtractor = {({id},index) => id}
+          />
+        </View>
       </View>
     );
   }
@@ -107,8 +108,9 @@ const styles = StyleSheet.create({
     marginHorizontal: 0
   },
   chits: {
-    marginTop: 65,
-    fontSize: 16,
+    top:70,
+    height:490,
+    fontSize: 22,
     marginLeft: 10,
     marginRight: 10,
   },

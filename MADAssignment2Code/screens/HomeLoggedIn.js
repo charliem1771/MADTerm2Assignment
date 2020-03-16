@@ -86,9 +86,25 @@ class HomeScreenLoggedIn extends Component
   }
   async logOut()
   {
-    await AsyncStorage.removeItem('TOKEN_KEY')
-    Alert.alert("Logout Successful");
-    this.props.navigation.navigate('Login');
+    let userToken = await AsyncStorage.getItem('TOKEN_KEY')
+
+    return fetch("http://10.0.2.2:3333/api/v0.0.5/logout",
+    {
+      headers:
+      {
+        'Content-Type': 'application/json',
+        'X-Authorization': userToken
+      },
+      method:'POST',
+    })
+    .then(response => {
+      AsyncStorage.removeItem('TOKEN_KEY')
+      Alert.alert("Logout Successful");
+      this.props.navigation.navigate('Login')
+    })
+    .catch((error) => {
+      console.log(error)
+    });
   }
   componentDidMount()
   {
@@ -125,7 +141,7 @@ class HomeScreenLoggedIn extends Component
           data = {this.state.chits}
           renderItem = {({item}) =>
           <View>
-            <Text>{item.chit_content}</Text>
+            <Text>{item.user.given_name} {item.user.family_name}: {item.chit_content}</Text>
           </View>}
           keyExtractor = {({id},index) => id}
           />
@@ -165,7 +181,7 @@ const styles = StyleSheet.create({
   chits: {
     top:60,
     height:430,
-    fontSize: 16,
+    fontSize: 22,
     marginLeft: 10,
     marginRight: 10,
   },
