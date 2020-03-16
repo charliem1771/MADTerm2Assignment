@@ -18,16 +18,16 @@ class HomeScreenLoggedIn extends Component
         longitude: 0,
         latitude: 0
       },
-      refreshText:
+      refresh:
       {
-        refreshText: 'Text'
+        refresh: 'Text'
       }
     };
   }
 
   getData()
   {
-    return fetch("http://10.0.2.2:3333/api/v0.0.5/chits")
+    return fetch("http://10.0.2.2:3333/api/v0.0.5/chits?start=0&count=1000")
     .then((response) => response.json())
     .then((responseJson) => {
       this.setState({
@@ -39,6 +39,7 @@ class HomeScreenLoggedIn extends Component
         console.log(error);
       });
   }
+
   getUser()
   {
     return fetch("http://10.0.2.2:3333/api/v0.0.5/search_user?q="+this.state.id)
@@ -55,7 +56,7 @@ class HomeScreenLoggedIn extends Component
   async postChit()
   {
     let userToken = await AsyncStorage.getItem('TOKEN_KEY')
-    
+
     return fetch("http://10.0.2.2:3333/api/v0.0.5/chits",
     {
       headers:
@@ -76,8 +77,8 @@ class HomeScreenLoggedIn extends Component
     })
     .then(response => response.json())
     .then(jsonChit => {
-      this.setState({refreshText:''})
-      console.log(jsonChit)
+      this.setState({refresh:''})
+      this.getData();
     })
     .catch((error) => {
       console.log(error)
@@ -91,8 +92,8 @@ class HomeScreenLoggedIn extends Component
   }
   componentDidMount()
   {
-    this.getData();
     this.getUser();
+    this.getData();
   }
 
   static navigationOptions = {header: null}
@@ -106,7 +107,7 @@ class HomeScreenLoggedIn extends Component
         )
     }
     return(
-      <View>
+      <View style = {styles.container}>
         <Text style = {styles.headerText}>Chitter!</Text>
         <TextInput placeholder = "Search Users..." style ={styles.textInput}
         onChangeText = {(text) => this.setState({id:text})}/>
@@ -119,23 +120,29 @@ class HomeScreenLoggedIn extends Component
         <View style={styles.profileButton}>
           <Button title = "Profile" onPress={()=>this.props.navigation.navigate('profilePage')}/>
         </View>
-        <View style = {styles.chit}>
-          <TextInput placeholder = "Chit.." onChangeText ={(text) => this.setState({chit_content:text})}/>
-          <Button title = "Chit!" onPress={()=>this.postChit()}/>
+        <View style = {styles.chits}>
           <FlatList
           data = {this.state.chits}
           renderItem = {({item}) =>
           <View>
-            <Text style ={styles.chits}>{item.chit_content}</Text>
+            <Text>{item.chit_content}</Text>
           </View>}
           keyExtractor = {({id},index) => id}
           />
+        </View>
+        <View style = {styles.chitInput}>
+          <TextInput style = {styles.textInputC} placeholder = "Chit.." onChangeText ={(text) => this.setState({chit_content:text})} value ={this.state.refresh}/>
+          <Button title = "Chit!" onPress={()=>this.postChit()}/>
         </View>
       </View>
     );
   }
 }
 const styles = StyleSheet.create({
+  container:{
+    flexDirection:"column",
+    flex: 1
+  },
   headerText:{
     marginTop:15,
     fontSize: 25,
@@ -156,7 +163,8 @@ const styles = StyleSheet.create({
     marginHorizontal: 0
   },
   chits: {
-    marginTop: 65,
+    top:60,
+    height:430,
     fontSize: 16,
     marginLeft: 10,
     marginRight: 10,
@@ -177,6 +185,19 @@ const styles = StyleSheet.create({
   },
   chit:{
     marginTop: 100
+  },
+  chitInput:{
+    position: "absolute",
+    marginBottom:0,
+    bottom: 0
+  },
+  textInputC:
+  {
+    height:40,
+    width: 420,
+    borderColor: 'gray',
+    borderWidth: 1,
+    marginRight: 25
   }
 });
 

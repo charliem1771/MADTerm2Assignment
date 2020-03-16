@@ -15,7 +15,7 @@ class HomeScreen extends Component
   }
   getData()
   {
-    return fetch("http://10.0.2.2:3333/api/v0.0.5/chits")
+    return fetch("http://10.0.2.2:3333/api/v0.0.5/chits?start=0&count=100")
     .then((response) => response.json())
     .then((responseJson) => {
       this.setState({
@@ -43,7 +43,6 @@ class HomeScreen extends Component
   componentDidMount()
   {
     this.getData();
-    this.getUser();
   }
 
   static navigationOptions = {header: null}
@@ -79,7 +78,7 @@ class HomeScreen extends Component
         data = {this.state.chits}
         renderItem = {({item}) =>
         <View>
-          <Text style ={styles.chits}>{item.chit_content}</Text>
+          <Text>{item.chit_content}</Text>
         </View>}
         keyExtractor = {({id},index) => id}
         />
