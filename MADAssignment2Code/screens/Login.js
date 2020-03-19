@@ -61,7 +61,7 @@ class LoginScreen extends Component
       <View>
         <Text style = {styles.headerText} >Login!</Text>
         <TextInput style = {styles.textInput} placeholder = "Username..." onChangeText = {(text) => this.setState({email:text})}/>
-        <TextInput style = {styles.textInput2} placeholder = "Password..." onChangeText = {(text) => this.setState({password:text})}/>
+        <TextInput style = {styles.textInput2} secureTextEntry={true} placeholder = "Password..." onChangeText = {(text) => this.setState({password:text})}/>
         <View style={styles.loginButton}>
           <Button title="Login" onPress={()=>this.login()}/>
         </View>
@@ -107,7 +107,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row-reverse',
     marginTop: 100,
     height:40,
-    marginLeft: 150
+    marginLeft: 90
   }
 });
 export default LoginScreen;

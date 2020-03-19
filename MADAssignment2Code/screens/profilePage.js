@@ -27,6 +27,7 @@ class ProfileScreen extends Component
         isLoading:false,
         data:responseJson,
         });
+        this.setData();
       })
       .catch((error)=>{
         console.log(error);
@@ -53,12 +54,23 @@ class ProfileScreen extends Component
       })
     })
     .then(response => {
+      console.log(response)
       this.props.navigation.navigate('HomeLoggedIn');
     })
     .catch((error) => {
       console.log(error)
     });
 
+}
+
+setData()
+{
+  this.setState({
+    name: this.state.data.given_name,
+    last_name: this.state.data.family_name,
+    email: this.state.data.email,
+    password: this.state.data.password
+  })
 }
   async getFollowers()
   {
@@ -105,16 +117,14 @@ class ProfileScreen extends Component
         <Text style ={styles.header}>User Profile: {this.state.data.given_name} {this.state.data.family_name}</Text>
         <Text style ={styles.user}>Update Profile</Text>
         <Text style ={styles.user}>Name: {this.state.data.given_name}</Text>
-        <TextInput placeholder = {this.state.data.given_name} onChangeText ={(text) => this.setState({name:text})}/>
+        <TextInput style = {styles.user} defaultValue = {this.state.data.given_name} onChangeText ={(text) => this.setState({name:text})}/>
         <Text style ={styles.user}>Last Name: {this.state.data.family_name}</Text>
-        <TextInput placeholder = "Last Name.." onChangeText ={(text) => this.setState({last_name:text})}/>
+        <TextInput style = {styles.user} defaultValue = {this.state.data.family_name} onChangeText ={(text) => this.setState({last_name:text})}/>
         <Text style ={styles.user}>Email: {this.state.data.email}</Text>
-        <TextInput placeholder = "Email.." onChangeText ={(text) => this.setState({email:text})}/>
-        <Text style ={styles.user}>Password: {this.state.data.password}</Text>
-        <TextInput placeholder = "Password.." onChangeText ={(text) => this.setState({password:text})}/>
+        <TextInput style = {styles.user} defaultValue = {this.state.data.email} onChangeText ={(text) => this.setState({email:text})}/>
         <Button title = "Update User Profile" onPress={()=>this.updateUser()}/>
         <Text style = {styles.user}>Followers: {this.state.followers.length}</Text>
-        <Text style ={styles.user}>Following:{this.state.following.length}</Text>
+        <Text style ={styles.user}>Following: {this.state.following.length}</Text>
       </View>
 
     );
@@ -127,7 +137,7 @@ const styles = StyleSheet.create({
     textAlign: 'center'
   },
   user: {
-    marginTop: 20,
+    marginTop: 10,
     fontSize: 16,
     marginLeft: 10,
     marginRight: 10,

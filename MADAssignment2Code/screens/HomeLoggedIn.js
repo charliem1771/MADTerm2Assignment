@@ -228,7 +228,9 @@ const styles = StyleSheet.create({
   chitInput:{
     position: "absolute",
     marginBottom:0,
-    bottom: 0
+    bottom: 0,
+    width: 150,
+    marginLeft: 90
   },
   textInputC:
   {
@@ -242,7 +244,7 @@ const styles = StyleSheet.create({
   {
     top:60,
     height:40,
-    fontSize:16
+    fontSize:16,
   }
 });
 

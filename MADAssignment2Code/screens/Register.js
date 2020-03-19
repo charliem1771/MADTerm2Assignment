@@ -46,7 +46,7 @@ class RegisterScreen extends Component
         <TextInput style = {styles.textInput} placeholder = "Name..." onChangeText = {(text) => this.setState({name:text})}/>
         <TextInput style = {styles.textInput} placeholder = "Surname..." onChangeText = {(text) => this.setState({surname:text})}/>
         <TextInput style = {styles.textInput} placeholder = "Email..." onChangeText = {(text) => this.setState({email:text})}/>
-        <TextInput style = {styles.textInput} placeholder = "Password..." onChangeText = {(text) => this.setState({password:text})}/>
+        <TextInput style = {styles.textInput} secureTextEntry={true} placeholder = "Password..." onChangeText = {(text) => this.setState({password:text})}/>
         <View style={styles.registerButton}>
           <Button title="Sign Up!" onPress={()=>this.register()}/>
         </View>
