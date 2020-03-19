@@ -143,6 +143,20 @@ class HomeScreenLoggedIn extends Component
         <View style={styles.profileButton}>
           <Button title = "Profile" onPress={()=>this.props.navigation.navigate('profilePage')}/>
         </View>
+        <View>
+          <View style= {styles.user}>
+            <FlatList
+            data = {this.state.user}
+            renderItem = {({item}) =>
+            <View>
+              <TouchableOpacity onPress = {() => this.storeId('otherUserId',item.user_id.toString())}>
+                <Text>{item.given_name} {item.family_name}</Text>
+              </TouchableOpacity>
+            </View>}
+            keyExtractor = {({id},index) => id}
+            />
+          </View>
+        </View>
         <View style = {styles.chits}>
           <FlatList
           data = {this.state.chits}
@@ -223,6 +237,12 @@ const styles = StyleSheet.create({
     borderColor: 'gray',
     borderWidth: 1,
     marginRight: 25
+  },
+  user:
+  {
+    top:60,
+    height:40,
+    fontSize:16
   }
 });
 

@@ -9,6 +9,7 @@ class HomeScreen extends Component
     {
       isLoading: true,
       chits: [],
+      user:[],
       id: '',
       userId:''
     }
@@ -76,7 +77,18 @@ class HomeScreen extends Component
           <Button title = "Login" onPress={()=>this.props.navigation.navigate('Login')}/>
         </View>
         <View>
-
+          <View style= {styles.user}>
+            <FlatList
+            data = {this.state.user}
+            renderItem = {({item}) =>
+            <View>
+              <TouchableOpacity onPress = {() => this.storeId('otherUserId',item.user_id.toString())}>
+                <Text>{item.given_name} {item.family_name}</Text>
+              </TouchableOpacity>
+            </View>}
+            keyExtractor = {({id},index) => id}
+            />
+          </View>
         </View>
           <View style= {styles.chits}>
             <FlatList
@@ -115,8 +127,8 @@ const styles = StyleSheet.create({
     marginHorizontal: 0
   },
   chits: {
-    top:70,
-    height:490,
+    top:80,
+    height:500,
     fontSize: 22,
     marginLeft: 10,
     marginRight: 10,
@@ -130,8 +142,8 @@ const styles = StyleSheet.create({
     marginHorizontal: 0
   },
   user: {
-    top:1,
-    height:100,
+    top:60,
+    height:40,
     fontSize: 16,
   }
 });
