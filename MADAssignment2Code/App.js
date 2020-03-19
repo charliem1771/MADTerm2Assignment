@@ -7,7 +7,8 @@ import RegisterScreen from './screens/Register';
 import HomeScreenLoggedIn from './screens/HomeLoggedIn';
 import ProfileScreen from './screens/profilePage';
 import ProfileOther from './screens/otherUser';
-import ProfileOtherSignedIn from './screens/otherUserLoggedIn'
+import ProfileOtherSignedIn from './screens/otherUserLoggedIn';
+import ProfilePhoto from './screens/takePhoto'
 const AppStackNav = createStackNavigator({
   Home:{
     screen: HomeScreen
@@ -35,6 +36,10 @@ const AppStackNav = createStackNavigator({
   otherUserLoggedIn:
   {
     screen: ProfileOtherSignedIn
+  },
+  takePhoto:
+  {
+    screen: ProfilePhoto
   }
 });
 

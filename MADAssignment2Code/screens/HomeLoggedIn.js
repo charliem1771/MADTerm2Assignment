@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
-import{TouchableOpacity,FlatList,ActivityIndicator,Text,View,Button,TextInput,StyleSheet,AsyncStorage,Alert} from 'react-native';
+import GeoLocation from 'react-native-geolocation-service'
+import{TouchableOpacity,FlatList,ActivityIndicator,Text,View,Button,TextInput,StyleSheet,AsyncStorage,Alert,PermissionsAndroid} from 'react-native';
 class HomeScreenLoggedIn extends Component
 {
   constructor(props)
@@ -13,6 +14,7 @@ class HomeScreenLoggedIn extends Component
       user: '',
       timestamp: 0,
       chit_content: '',
+      locationPermission:'',
       location:
       {
         longitude: 0,
@@ -66,19 +68,19 @@ class HomeScreenLoggedIn extends Component
       },
       method:'POST',
       body:JSON.stringify({
-        timestamp:0,
+        timestamp:this.state.timestamp,
         chit_content: this.state.chit_content,
         location:
         {
-          longitude:0,
-          latitude:0
+          longitude: this.state.longitude,
+          latitude: this.state.latitude
         }
       })
     })
     .then(response => response.json())
     .then(jsonChit => {
       this.setState({refresh:''})
-      this.getData();
+      //this.getData();
     })
     .catch((error) => {
       console.log(error)
@@ -113,10 +115,88 @@ class HomeScreenLoggedIn extends Component
     this.props.navigation.navigate('otherUserLoggedIn')
     console.log(id);
   }
+
+  async getLocationPermission()
+  {
+    try
+    {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+        {
+          title: 'Access Title',
+          buttonNeutral: 'Ask me later',
+          buttonNegative: 'Cancel',
+          buttonPositive: 'Ok',
+        },
+      );
+      if(granted === PermissionsAndroid.RESULTS.GRANTED)
+      {
+        console.log("Location access granted")
+        return true;
+      }
+      else
+      {
+        console.log("Location access denied")
+        return false;
+      }
+
+    }
+    catch(error)
+    {
+      console.log(error)
+    }
+  }
+
+  getCoordinates = () =>
+  {
+    if(!this.state.locationPermission)
+    {
+      this.state.locationPermission = this.getLocationPermission();
+    }
+    GeoLocation.getCurrentPosition(
+      (position) =>
+      {
+        const geolocation = JSON.stringify(position);
+        this.setState({
+          geolocation,
+          timestamp: position.timestamp,
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude
+        });
+        console.log("Check",geolocation)
+        console.log("timestamp",this.state.timestamp)
+        console.log("check latitude",this.state.latitude)
+        console.log("check longitude",this.state.longitude)
+        this.postChit();
+      },
+      (error) =>
+      {
+        Alert.alert(error.message)
+      },
+      {
+        enabledHighAccuracy:true,
+        timeout:20000,
+        maximumAge:1000
+      }
+    );
+  };
+  addLocation()
+  {
+    Alert.alert(
+      'Add location?',
+      'Do you want to add your geolocation?',
+      [
+        {text: "Do not add location", onPress: () => this.postChit()},
+        {text: "cancel",onPress: () => console.log("Canceled")},
+        {text: 'OK',onPress:() => this.getCoordinates()},
+      ]
+    );
+  }
   componentDidMount()
   {
     this.getUser();
     this.getData();
+    this.getLocationPermission();
   }
 
   static navigationOptions = {header: null}
@@ -164,14 +244,15 @@ class HomeScreenLoggedIn extends Component
           <View>
             <TouchableOpacity onPress = {() => this.storeId('otherUserId',item.user.user_id.toString())}>
               <Text>{item.user.given_name} {item.user.family_name}: {item.chit_content}</Text>
+              <Text>{this.state.latitude} {this.state.longitude}</Text>
             </TouchableOpacity>
           </View>}
           keyExtractor = {({id},index) => id}
           />
         </View>
+        <TextInput style = {styles.textInputC} placeholder = "Chit.." onChangeText ={(text) => this.setState({chit_content:text})} value ={this.state.refresh}/>
         <View style = {styles.chitInput}>
-          <TextInput style = {styles.textInputC} placeholder = "Chit.." onChangeText ={(text) => this.setState({chit_content:text})} value ={this.state.refresh}/>
-          <Button title = "Chit!" onPress={()=>this.postChit()}/>
+          <Button title = "Chit!" onPress={()=>this.addLocation()}/>
         </View>
       </View>
     );
@@ -230,7 +311,7 @@ const styles = StyleSheet.create({
     marginBottom:0,
     bottom: 0,
     width: 150,
-    marginLeft: 90
+    marginLeft: 120
   },
   textInputC:
   {
@@ -238,7 +319,10 @@ const styles = StyleSheet.create({
     width: 420,
     borderColor: 'gray',
     borderWidth: 1,
-    marginRight: 25
+    marginRight: 25,
+    position: "absolute",
+    marginBottom:0,
+    bottom: 35,
   },
   user:
   {

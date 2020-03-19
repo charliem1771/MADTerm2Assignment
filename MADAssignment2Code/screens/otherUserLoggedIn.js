@@ -1,5 +1,5 @@
 import React,{ Component } from 'react';
-import{FlatList,ActivityIndicator,Text,View,Button,TextInput,StyleSheet,AsyncStorage,Alert} from 'react-native';
+import{FlatList,Image,ActivityIndicator,Text,View,Button,TextInput,StyleSheet,AsyncStorage,Alert} from 'react-native';
 class ProfileOtherSignedIn extends Component
 {
   constructor(props)
@@ -11,6 +11,7 @@ class ProfileOtherSignedIn extends Component
       data:[],
       followers:[],
       following:[],
+      photo:[],
       name:'',
       last_name:'',
       email:'',
@@ -73,8 +74,22 @@ class ProfileOtherSignedIn extends Component
       console.log(error)
     });
   }
-
-
+  async getPhoto()
+  {
+    let id = await AsyncStorage.getItem('otherUserId')
+    return fetch("http://10.0.2.2:3333/api/v0.0.5/user/"+id+"/photo")
+    .then((response) => response.json())
+    .then((responseJson) => {
+      console.log("test ",responseJson)
+      this.setState({
+        isLoading:false,
+        photo:responseJson,
+        });
+      })
+      .catch((error)=>{
+        console.log(error);
+      });
+  }
   async getFollowers()
   {
     let id = await AsyncStorage.getItem('otherUserId')
@@ -113,11 +128,13 @@ class ProfileOtherSignedIn extends Component
     this.getUser();
     this.getFollowers();
     this.getFollowing();
+    this.getPhoto();
   }
   render()
   {
     return(
       <View>
+        <Image style ={styles.profilePicture} source={{uri: this.state.photo.uri}}/>
         <Text style ={styles.header}>User Profile: {this.state.data.given_name} {this.state.data.family_name}</Text>
         <Text style ={styles.user}>Name: {this.state.data.given_name}</Text>
         <Text style ={styles.user}>Last Name: {this.state.data.family_name}</Text>
@@ -132,7 +149,7 @@ class ProfileOtherSignedIn extends Component
   }
 }
 const styles = StyleSheet.create({
-  header:{
+  header: {
     marginTop:15,
     fontSize: 25,
     textAlign: 'center'
@@ -142,6 +159,12 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginLeft: 10,
     marginRight: 10,
+  },
+  profilePicture: {
+    width: 100,
+    height: 100,
+    marginTop: 10,
+    marginLeft: 150
   }
 });
 export default ProfileOtherSignedIn;
