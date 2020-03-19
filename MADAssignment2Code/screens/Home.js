@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import{FlatList,ActivityIndicator,Text,View,Button,TextInput,StyleSheet} from 'react-native';
+import{AsyncStorage,Alert,FlatList,ActivityIndicator,Text,View,Button,TextInput,StyleSheet,TouchableOpacity,Select} from 'react-native';
 class HomeScreen extends Component
 {
   constructor(props)
@@ -10,6 +10,7 @@ class HomeScreen extends Component
       isLoading: true,
       chits: [],
       id: '',
+      userId:''
     }
   }
   getData()
@@ -31,6 +32,7 @@ class HomeScreen extends Component
     return fetch("http://10.0.2.2:3333/api/v0.0.5/search_user?q="+this.state.id)
     .then((response) => response.json())
     .then((responseJson) => {
+      console.log(responseJson)
       this.setState({
         user:responseJson,
         });
@@ -38,6 +40,14 @@ class HomeScreen extends Component
       .catch((error)=>{
         console.log(error);
       });
+  }
+  async storeId(resp,respVal)
+  {
+    await AsyncStorage.setItem(resp,respVal)
+    let id = await AsyncStorage.getItem('otherUserId');
+    this.props.navigation.navigate('otherUser')
+    console.log(id);
+    //Alert.alert(this.state.chits.user.user_id)
   }
   componentDidMount()
   {
@@ -65,24 +75,21 @@ class HomeScreen extends Component
         <View style={styles.loginButton}>
           <Button title = "Login" onPress={()=>this.props.navigation.navigate('Login')}/>
         </View>
-        <FlatList
-        data = {this.state.user}
-        renderItem = {({item}) =>
         <View>
-          <Text style>{item.given_name}</Text>
-        </View>}
-        keyExtractor = {({id},index) => id}
-        />
-        <View style= {styles.chits}>
-          <FlatList
-          data = {this.state.chits}
-          renderItem = {({item}) =>
-          <View>
-            <Text>{item.user.given_name} {item.user.family_name}: {item.chit_content}</Text>
-          </View>}
-          keyExtractor = {({id},index) => id}
-          />
+
         </View>
+          <View style= {styles.chits}>
+            <FlatList
+            data = {this.state.chits}
+            renderItem = {({item}) =>
+            <View>
+              <TouchableOpacity onPress = {() => this.storeId('otherUserId',item.user.user_id.toString())}>
+                <Text>{item.user.given_name} {item.user.family_name}: {item.chit_content}</Text>
+              </TouchableOpacity>
+            </View>}
+            keyExtractor = {({id},index) => id}
+            />
+          </View>
       </View>
     );
   }
@@ -122,6 +129,11 @@ const styles = StyleSheet.create({
     marginTop: -100,
     marginHorizontal: 0
   },
+  user: {
+    top:1,
+    height:100,
+    fontSize: 16,
+  }
 });
 
 export default HomeScreen;

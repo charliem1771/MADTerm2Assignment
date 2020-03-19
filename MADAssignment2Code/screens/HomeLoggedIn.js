@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import{FlatList,ActivityIndicator,Text,View,Button,TextInput,StyleSheet,AsyncStorage,Alert} from 'react-native';
+import{TouchableOpacity,FlatList,ActivityIndicator,Text,View,Button,TextInput,StyleSheet,AsyncStorage,Alert} from 'react-native';
 class HomeScreenLoggedIn extends Component
 {
   constructor(props)
@@ -106,6 +106,13 @@ class HomeScreenLoggedIn extends Component
       console.log(error)
     });
   }
+  async storeId(resp,respVal)
+  {
+    await AsyncStorage.setItem(resp,respVal)
+    let id = await AsyncStorage.getItem('otherUserId');
+    this.props.navigation.navigate('otherUserLoggedIn')
+    console.log(id);
+  }
   componentDidMount()
   {
     this.getUser();
@@ -141,7 +148,9 @@ class HomeScreenLoggedIn extends Component
           data = {this.state.chits}
           renderItem = {({item}) =>
           <View>
-            <Text>{item.user.given_name} {item.user.family_name}: {item.chit_content}</Text>
+            <TouchableOpacity onPress = {() => this.storeId('otherUserId',item.user.user_id.toString())}>
+              <Text>{item.user.given_name} {item.user.family_name}: {item.chit_content}</Text>
+            </TouchableOpacity>
           </View>}
           keyExtractor = {({id},index) => id}
           />
