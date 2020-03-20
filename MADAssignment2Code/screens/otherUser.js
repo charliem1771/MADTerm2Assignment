@@ -1,5 +1,5 @@
 import React,{ Component } from 'react';
-import{FlatList,ActivityIndicator,Text,View,Button,TextInput,StyleSheet,AsyncStorage,Alert} from 'react-native';
+import{Image,FlatList,ActivityIndicator,Text,View,Button,TextInput,StyleSheet,AsyncStorage,Alert} from 'react-native';
 class ProfileOther extends Component
 {
   constructor(props)

@@ -34,7 +34,6 @@ class RegisterScreen extends Component
     })
     .then((response) => this.props.navigation.navigate('Login'))
     .catch((error) => {
-      console.log(error);
     });
   }
 

@@ -1,5 +1,5 @@
 import React,{ Component } from 'react';
-import { FlatList,ActivityIndicator,Text,View,Button,TextInput,StyleSheet,Alert } from 'react-native';
+import { FlatList,ActivityIndicator,Text,View,TextInput,StyleSheet,Alert,Button } from 'react-native';
 import {AsyncStorage} from 'react-native';
 class LoginScreen extends Component
 {
@@ -52,7 +52,7 @@ class LoginScreen extends Component
     }
     )
     .catch((error) => {
-      console.log(error);
+      Alert.alert("Login Failed");
     });
   }
   render()

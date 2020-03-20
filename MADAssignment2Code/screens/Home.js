@@ -83,7 +83,7 @@ class HomeScreen extends Component
             renderItem = {({item}) =>
             <View>
               <TouchableOpacity onPress = {() => this.storeId('otherUserId',item.user_id.toString())}>
-                <Text>{item.given_name} {item.family_name}</Text>
+                <Text style = {styles.text}>{item.given_name} {item.family_name}</Text>
               </TouchableOpacity>
             </View>}
             keyExtractor = {({id},index) => id}
@@ -96,7 +96,7 @@ class HomeScreen extends Component
             renderItem = {({item}) =>
             <View>
               <TouchableOpacity onPress = {() => this.storeId('otherUserId',item.user.user_id.toString())}>
-                <Text>{item.user.given_name} {item.user.family_name}: {item.chit_content}</Text>
+                <Text style = {styles.text}>{item.user.given_name} {item.user.family_name}: {item.chit_content}</Text>
               </TouchableOpacity>
             </View>}
             keyExtractor = {({id},index) => id}
@@ -129,9 +129,11 @@ const styles = StyleSheet.create({
   chits: {
     top:80,
     height:500,
-    fontSize: 22,
     marginLeft: 10,
     marginRight: 10,
+  },
+  text: {
+    fontSize:16
   },
   loginButton: {
     flexDirection: 'row-reverse',
@@ -144,7 +146,8 @@ const styles = StyleSheet.create({
   user: {
     top:60,
     height:40,
-    fontSize: 16,
+    marginLeft: 10,
+    marginRight: 10,
   }
 });
 

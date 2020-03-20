@@ -8,7 +8,7 @@ import HomeScreenLoggedIn from './screens/HomeLoggedIn';
 import ProfileScreen from './screens/profilePage';
 import ProfileOther from './screens/otherUser';
 import ProfileOtherSignedIn from './screens/otherUserLoggedIn';
-import ProfilePhoto from './screens/takePhoto'
+import ProfilePhoto from './screens/takePhoto';
 const AppStackNav = createStackNavigator({
   Home:{
     screen: HomeScreen

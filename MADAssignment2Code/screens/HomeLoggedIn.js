@@ -55,7 +55,7 @@ class HomeScreenLoggedIn extends Component
         console.log(error);
       });
   }
-  async postChit()
+  async postChitGeo()
   {
     let userToken = await AsyncStorage.getItem('TOKEN_KEY')
 
@@ -80,7 +80,38 @@ class HomeScreenLoggedIn extends Component
     .then(response => response.json())
     .then(jsonChit => {
       this.setState({refresh:''})
-      //this.getData();
+      this.getData();
+    })
+    .catch((error) => {
+      console.log(error)
+    });
+  }
+  async postChit()
+  {
+    let userToken = await AsyncStorage.getItem('TOKEN_KEY')
+
+    return fetch("http://10.0.2.2:3333/api/v0.0.5/chits",
+    {
+      headers:
+      {
+        'Content-Type': 'application/json',
+        'X-Authorization': userToken
+      },
+      method:'POST',
+      body:JSON.stringify({
+        timestamp:0,
+        chit_content: this.state.chit_content,
+        location:
+        {
+          longitude:0,
+          latitude:0
+        }
+      })
+    })
+    .then(response => response.json())
+    .then(jsonChit => {
+      this.setState({refresh:''})
+      this.getData();
     })
     .catch((error) => {
       console.log(error)
@@ -163,11 +194,7 @@ class HomeScreenLoggedIn extends Component
           latitude: position.coords.latitude,
           longitude: position.coords.longitude
         });
-        console.log("Check",geolocation)
-        console.log("timestamp",this.state.timestamp)
-        console.log("check latitude",this.state.latitude)
-        console.log("check longitude",this.state.longitude)
-        this.postChit();
+        this.postChitGeo();
       },
       (error) =>
       {
@@ -188,7 +215,7 @@ class HomeScreenLoggedIn extends Component
       [
         {text: "Do not add location", onPress: () => this.postChit()},
         {text: "cancel",onPress: () => console.log("Canceled")},
-        {text: 'OK',onPress:() => this.getCoordinates()},
+        {text: 'Add Location',onPress:() => this.getCoordinates()},
       ]
     );
   }
@@ -244,7 +271,7 @@ class HomeScreenLoggedIn extends Component
           <View>
             <TouchableOpacity onPress = {() => this.storeId('otherUserId',item.user.user_id.toString())}>
               <Text>{item.user.given_name} {item.user.family_name}: {item.chit_content}</Text>
-              <Text>{this.state.latitude} {this.state.longitude}</Text>
+              <Text>Latitude: {this.state.latitude} Longitude: {this.state.longitude}</Text>
             </TouchableOpacity>
           </View>}
           keyExtractor = {({id},index) => id}

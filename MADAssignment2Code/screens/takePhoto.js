@@ -71,8 +71,8 @@ class ProfilePhoto extends Component
         uri
       })
     })
-    .then(response => response.json())
-    .then(jsonChit => {
+    .then(response => {
+      this.props.navigation.navigate('profilePage');
     })
     .catch((error) => {
       console.log(error)

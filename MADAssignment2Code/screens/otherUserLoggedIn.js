@@ -46,9 +46,9 @@ class ProfileOtherSignedIn extends Component
       },
       method:'POST',
     })
-    .then(response => response.json())
-    .then((responseJson) => {
-
+    .then(response => {
+      this.getFollowing();
+      this.getFollowers();
     })
     .catch((error) => {
       console.log(error)
@@ -67,8 +67,9 @@ class ProfileOtherSignedIn extends Component
       },
       method:'DELETE',
     })
-    .then(response => response.json())
-    .then((responseJson) => {
+    .then(response => {
+      this.getFollowing();
+      this.getFollowers();
     })
     .catch((error) => {
       console.log(error)
@@ -96,12 +97,10 @@ class ProfileOtherSignedIn extends Component
     return fetch("http://10.0.2.2:3333/api/v0.0.5/user/"+id+"/followers")
     .then((response) => response.json())
     .then((responseJson) => {
-      console.log("test ",responseJson)
       this.setState({
         isLoading:false,
         followers:responseJson,
         });
-        console.log(this.state.followers.user_id)
       })
       .catch((error)=>{
         console.log(error);
@@ -113,7 +112,6 @@ class ProfileOtherSignedIn extends Component
     return fetch("http://10.0.2.2:3333/api/v0.0.5/user/"+id+"/following")
     .then((response) => response.json())
     .then((responseJson) => {
-      console.log("test ",responseJson)
       this.setState({
         isLoading:false,
         following:responseJson,
@@ -130,8 +128,16 @@ class ProfileOtherSignedIn extends Component
     this.getFollowing();
     this.getPhoto();
   }
+
   render()
   {
+    if(this.state.isLoading){
+      return(
+        <View>
+          <ActivityIndicator/>
+        </View>
+        )
+    }
     return(
       <View>
         <Image style ={styles.profilePicture} source={{uri: this.state.photo.uri}}/>
@@ -141,8 +147,12 @@ class ProfileOtherSignedIn extends Component
         <Text style ={styles.user}>Email: {this.state.data.email}</Text>
         <Text style = {styles.user}>Followers: {this.state.followers.length}</Text>
         <Text style ={styles.user}>Following:{this.state.following.length}</Text>
-        <Button title = "Follow" onPress={()=>this.followUser()}/>
-        <Button title = "UnFollow" onPress={()=>this.unFollowUser()}/>
+        <View style = {styles.buttonStyle}>
+          <Button title = "Follow" onPress={()=>this.followUser()}/>
+        </View>
+        <View style = {styles.buttonStyle}>
+          <Button title = "UnFollow" onPress={()=>this.unFollowUser()}/>
+        </View>
       </View>
 
     );
@@ -165,6 +175,12 @@ const styles = StyleSheet.create({
     height: 100,
     marginTop: 10,
     marginLeft: 150
+  },
+  buttonStyle:
+  {
+    marginTop: 30,
+    width: 200,
+    marginLeft: 100
   }
 });
 export default ProfileOtherSignedIn;

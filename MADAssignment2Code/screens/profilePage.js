@@ -29,6 +29,7 @@ class ProfileScreen extends Component
         data:responseJson,
         });
         this.setData();
+        this.getPhoto();
       })
       .catch((error)=>{
         console.log(error);
@@ -55,8 +56,7 @@ class ProfileScreen extends Component
       })
     })
     .then(response => {
-      console.log(response)
-      this.props.navigation.navigate('HomeLoggedIn');
+      this.getUser();
     })
     .catch((error) => {
       console.log(error)
@@ -141,10 +141,14 @@ setData()
         <TextInput style = {styles.user} defaultValue = {this.state.data.family_name} onChangeText ={(text) => this.setState({last_name:text})}/>
         <Text style ={styles.user}>Email: {this.state.data.email}</Text>
         <TextInput style = {styles.user} defaultValue = {this.state.data.email} onChangeText ={(text) => this.setState({email:text})}/>
-        <Button title = "Update User Profile" onPress={()=>this.updateUser()}/>
+        <View style = {styles.buttonStyle}>
+          <Button title = "Update User Profile" onPress={()=>this.updateUser()}/>
+        </View>
         <Text style = {styles.user}>Followers: {this.state.followers.length}</Text>
         <Text style ={styles.user}>Following: {this.state.following.length}</Text>
-        <Button title = "Take Photo" onPress={()=>this.props.navigation.navigate('takePhoto')}/>
+        <View style = {styles.buttonStyle}>
+          <Button title = "Take Photo" onPress={()=>this.props.navigation.navigate('takePhoto')}/>
+        </View>
       </View>
 
     );
@@ -168,6 +172,11 @@ const styles = StyleSheet.create({
     height: 100,
     marginTop: 10,
     marginLeft: 150
+  },
+  buttonStyle:
+  {
+    width: 200,
+    marginLeft: 100
   }
 });
 export default ProfileScreen;
